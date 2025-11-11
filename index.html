@@ -1,0 +1,62 @@
+<script>
+  document.getElementById('airtimeForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const data = {
+      network: document.getElementById('network').value,
+      amount: document.getElementById('amount').value,
+      senderNumber: document.getElementById('senderNumber').value,
+      payoutMethod: document.getElementById('payoutMethod').value
+    };
+
+    const responseBox = document.getElementById('response');
+    responseBox.textContent = 'Processing...';
+
+    try {
+      const res = await fetch('https://your-backend-url/convert-airtime', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+      responseBox.textContent = result.status === 'success'
+        ? `✅ Cash sent: ${result.payout}`
+        : `❌ ${result.message || 'Conversion failed'}`;
+    } catch (err) {
+      responseBox.textContent = '❌ Network error. Please try again.';
+    }
+  });
+</script>
+
+
+<form id="airtimeForm" style="max-width: 400px; margin: auto;">
+  <h2>Convert Airtime to Cash</h2>
+
+  <label for="network">Network:</label>
+  <select id="network" required>
+    <option value="">--Select--</option>
+    <option value="MTN">MTN</option>
+    <option value="Airtel">Airtel</option>
+    <option value="Glo">Glo</option>
+    <option value="9Mobile">9Mobile</option>
+  </select>
+
+  <label for="amount">Amount (UGX):</label>
+  <input type="number" id="amount" required />
+
+  <label for="senderNumber">Your Phone Number:</label>
+  <input type="tel" id="senderNumber" required />
+
+  <label for="payoutMethod">Payout Method:</label>
+  <select id="payoutMethod" required>
+    <option value="">--Select--</option>
+    <option value="MTN MoMo">MTN MoMo</option>
+    <option value="Airtel Money">Airtel Money</option>
+    <option value="Bank Transfer">Bank Transfer</option>
+  </select>
+
+  <button type="submit">Convert Now</button>
+</form>
+
+<div id="response" style="margin-top: 20px; text-align: center;"></div>
