@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AirtimeSwap UG</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+    }
+    h2 { color: #2c3e50; }
+    label { display: block; margin-top: 15px; }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #eafaf1;
+      border: 1px solid #2ecc71;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Airtime to Cash Converter</h2>
+  <form id="converterForm">
+    <label for="amount">Airtime Amount (UGX):</label>
+    <input type="number" id="amount" required />
+
+    <label for="network">Network:</label>
+    <select id="network" required>
+      <option value="">Select Network</option>
+      <option value="MTN">MTN</option>
+      <option value="Airtel">Airtel</option>
+    </select>
+
+    <label for="phone">Your Mobile Money Number:</label>
+    <input type="tel" id="phone" placeholder="e.g. 077xxxxxxx" required />
+
+    <button type="submit">Convert Now</button>
+  </form>
+
+  <div class="result" id="result" style="display:none;"></div>
+
+  <script>
+    const form = document.getElementById('converterForm');
+    const result = document.getElementById('result');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const amount = parseFloat(document.getElementById('amount').value);
+      const network = document.getElementById('network').value;
+      const phone = document.getElementById('phone').value;
+
+      if (!amount || !network || !phone) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      const rate = 0.85; // 15% fee
+      const cash = Math.round(amount * rate);
+
+      result.style.display = 'block';
+      result.innerHTML = `
+        <strong>Conversion Summary:</strong><br/>
+        Airtime: UGX ${amount}<br/>
+        Network: ${network}<br/>
+        You will receive: <strong>UGX ${cash}</strong><br/><br/>
+        <em>Your request has been submitted. You will receive your cash shortly on ${phone}.</em>
+      `;
+
+      // TODO: Send data to backend or email notification
+      console.log({ amount, network, phone, cash });
+    });
+  </script>
+</body>
+</html>
